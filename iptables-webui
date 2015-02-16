@@ -6,6 +6,12 @@
  * 
  * (c) 2015 Robert McLeod released under MIT Licence
  *
+ * You may be thinking the start of this script is
+ * a bit ugly, ignoring typical convention.  This
+ * is only to make sure thingss start as fast as
+ * possible.  No point waiting for everything to
+ * load before finding that the port is in use.
+*
 \***************************************************/
 
 // TODO: get command line options working
