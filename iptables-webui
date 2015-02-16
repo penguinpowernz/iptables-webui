@@ -39,6 +39,8 @@ var app     = express(),
 
 // bayeux.attach(server);
 
+iprules.init(HOME);
+
 // setup static files
 app.use(express.static(__dirname + '/public'));
 
