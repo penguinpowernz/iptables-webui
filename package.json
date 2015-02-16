@@ -1,0 +1,9 @@
+{
+  "name"        : "iptables-webui",
+  "version"     : "0.0.1",
+  "author"      : "Robert McLeod",
+  "licence"     : "MIT",
+  "dependencies": {
+    "express": "~4.11.2"
+  }
+}
