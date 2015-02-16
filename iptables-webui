@@ -54,6 +54,8 @@ createLockFile(LOCK, function(err, pid) {
 });
 
 
+// TODO: run setup here to 
+
 
 var http    = require("http"),
     iprules = require("./lib/iprules"),
