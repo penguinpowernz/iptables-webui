@@ -53,6 +53,10 @@ app.get("/import", function(req, res) {
 });
 
 app.get("/rules", function(req, res) {
+  // iprules.all(function(rules) {
+  //   res.json({rules: rules});
+  // });
+
   res.json([
     {name: "ssh-in", enabled: "true"},
     {name: "ssh-out", enabled: "true"}
