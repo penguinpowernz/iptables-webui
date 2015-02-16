@@ -24,6 +24,7 @@ if ( process.getuid() != 0 ) {
 
 
 var http    = require("http"),
+    iprules = require("./lib/iprules"),
     express = require("express");
 
 var app     = express(),
@@ -39,9 +40,51 @@ var app     = express(),
 // setup static files
 app.use(express.static(__dirname + '/public'));
 
-// TODO: add app stuff
+app.get("/import", function(req, res) {
+  if ( !req.params.path ) res.status(400).end();
 
-// Start the WebUI
-app.listen(PORT, function() {
-  console.log("Started IPTables WebUI on port "+PORT);
+  iprules.import(req.params.path, function(results) {
+    res.status(200).json(results).end();
+  });
 });
+
+app.get("/rules", function(req, res) {
+  res.json([
+    {name: "ssh-in", enabled: "true"},
+    {name: "ssh-out", enabled: "true"}
+  ]);
+});
+
+app.put("/rules/:name/enable", function(req, res) {
+  iprules.enable(req.params.name, function(err) {
+    res.status(err ? 500 : 200).end();
+  });
+});
+
+app.put("/rules/:name/disable", function(req, res) {
+  iprules.disable(req.params.name, function(err) {
+    res.status(err ? err.status || 500 : 200).end();
+  });
+});
+
+app.get("/reload", function(req, res) {
+  iprules.reload(function(err, result) {
+    if ( err ) {
+      res.json(err).status(500).end();
+    } else {
+      res.json(result).end();
+    }
+  });
+});
+
+app.post("/rules/:name/test", function(req, res) {
+  iprules.test(req.params.name, function(err) {
+    if ( err ) { res.status(400).json({message: err.message}).end(); }
+    res.status(200).end();
+  });
+});
+  
+  // Start the WebUI
+  app.listen(PORT, function() {
+    console.log("Started IPTables WebUI on port "+PORT);
+  });
