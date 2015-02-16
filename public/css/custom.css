@@ -5,3 +5,27 @@ body {
 #container {
   padding: 0 100px 0 100px;
 }
+
+.rule { 
+  width: 500px;
+  padding: 5px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.rule.enabled {
+  border: 2px solid green;
+  border-radius: 5px;
+  background: #D6FFBF;
+}
+
+.rule h2 {
+  margin: 0px;
+  padding: 0px;
+  float: left;
+}
+
+.rule div.btn-group {
+  /*display: inline-block;*/
+  float: right;
+}

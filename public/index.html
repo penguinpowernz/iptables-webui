@@ -55,8 +55,15 @@
     <script src="js/jsx_transformer-0.12.2.js"></script>
 
     <script type="text/javascript">
-    
     </script>
 
+    <script src="js/rules.jsx"></script>
+
+    <script type="text/jsx">
+      React.render(
+        <RulesBox url="rules"/>,
+        document.getElementById('container')
+      );
+    </script>
   </body>
 </html>
