@@ -1,0 +1,18 @@
+#!/bin/bash
+
+home="$1";
+
+# Precons
+[[ -z "$home" ]] && echo "Must specify setup folder" && exit 1;
+[[ -d "$home" ]] && [[ "$2" == "-f" ]] && echo "$home exists: force overwritting with -f" && exit 1;
+
+# Setup folders
+mkdir "$home";
+mkdir "$home/tmp";
+mkdir "$home/rules";
+
+# Files
+cat "[]" > "$home/enabled.json";
+cat "[]" > "$home/rules.json";
+
+exit 0;
