@@ -1,0 +1,47 @@
+#!/usr/bin/env nodejs
+
+/***************************************************\
+ *
+ * IP Tables Web UI
+ * 
+ * (c) 2015 Robert McLeod released under MIT Licence
+ *
+\***************************************************/
+
+// TODO: get command line options working
+
+// TODO: trap SIGINT to delete lockfile and exit
+
+// check for root
+if ( process.getuid() != 0 ) {
+  console.error("ERROR: Must run as root");
+  process.exit(1);
+}
+
+// TODO: check if the port is available
+
+// TODO: check/set the lockfile
+
+
+var http    = require("http"),
+    express = require("express");
+
+var app     = express(),
+    server  = http.createServer(app);
+
+// require faye and attach it to the server
+// var _faye  = require("faye"),
+//     bayeux = new _faye.NodeAdapter({mount: '/faye', timeout: 45}),
+//     faye   = _faye.Client("http://localhost:"+PORT+"/faye");
+
+// bayeux.attach(server);
+
+// setup static files
+app.use(express.static(__dirname + '/public'));
+
+// TODO: add app stuff
+
+// Start the WebUI
+app.listen(PORT, function() {
+  console.log("Started IPTables WebUI on port "+PORT);
+});
