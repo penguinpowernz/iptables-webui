@@ -9,6 +9,8 @@
 \***************************************************/
 
 // TODO: get command line options working
+var PORT = 8099,
+    HOME = "/var/lib/iptables";
 
 // TODO: trap SIGINT to delete lockfile and exit
 
@@ -83,8 +85,19 @@ app.post("/rules/:name/test", function(req, res) {
     res.status(200).end();
   });
 });
+
+
+// Run setup first
+exec("bin/setup "+HOME, function(err, stdout) {
+  if ( err ) {
+    console.error(err.message);
+    process.exit(1);
+  }
+
+  console.log(stdout);
   
   // Start the WebUI
   app.listen(PORT, function() {
     console.log("Started IPTables WebUI on port "+PORT);
   });
+});
