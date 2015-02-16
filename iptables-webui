@@ -11,8 +11,12 @@
 // TODO: get command line options working
 var PORT = 8099,
     HOME = "/var/lib/iptables";
+    LOCK = HOME+"/iptables-webui.pid";
 
-// TODO: trap SIGINT to delete lockfile and exit
+// trap SIGINT to delete lockfile and exit
+process.on("exit", function(code) {
+  fs.unlinkSync(LOCK);
+});
 
 // check for root
 if ( process.getuid() != 0 ) {
@@ -22,7 +26,33 @@ if ( process.getuid() != 0 ) {
 
 // TODO: check if the port is available
 
-// TODO: check/set the lockfile
+// function for checking/creating log file
+var createLockFile = function(lockfile, callback) {
+  fs.exists(lockfile, function() {
+    var pid = fs.readFileSync(lockfile);
+    exec("ps -p "+pid, function(err, stdout) { // check if it's running
+      if (err.code == 1) { // the process doesn't exist
+        pid = process.pid();
+        fs.writeFile(lockfile, pid, function(err){
+          callback(null, pid);
+        });
+      } else { // the process exists
+        var err = new Error("IP Tables WebUI is already running on PID "+pid);
+        callback(err, pid);
+      }
+    });
+  });
+};
+
+// TODO: MAKE THIS SYNCHRONOUS
+// check/set the lockfile
+createLockFile(LOCK, function(err, pid) {
+  if (err) {
+    console.error(err.message);
+    process.exit();
+  }
+});
+
 
 
 var http    = require("http"),
