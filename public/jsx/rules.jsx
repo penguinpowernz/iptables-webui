@@ -115,3 +115,9 @@ var RuleStateButtons = React.createClass({
       </div>
     );
   }
+});
+
+React.render(
+  <RulesBox url="rules"/>,
+  $('.page.rules')[0]
+);
