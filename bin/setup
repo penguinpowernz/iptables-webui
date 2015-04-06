@@ -12,7 +12,7 @@ mkdir "$home/tmp";
 mkdir "$home/rules";
 
 # Files
-cat "[]" > "$home/enabled.json";
-cat "[]" > "$home/rules.json";
+cat "\[\]" > "$home/enabled.json";
+cat "\[\]" > "$home/rules.json";
 
 exit 0;
