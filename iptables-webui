@@ -18,10 +18,12 @@
 var PORT = 8099,
     HOME = "/var/lib/iptables";
     LOCK = HOME+"/iptables-webui.pid";
+var fs   = require("fs"),
+    exec = require("child_process").exec;
 
 // trap SIGINT to delete lockfile and exit
 process.on("exit", function(code) {
-  fs.unlinkSync(LOCK);
+  if ( fs.existsSync(LOCK) ) fs.unlinkSync(LOCK);
 });
 
 // check for root
