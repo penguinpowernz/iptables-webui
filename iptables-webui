@@ -94,7 +94,7 @@ app.use(express.static(__dirname + '/public'));
 app.get("/import", function(req, res) {
   if ( !req.params.path ) res.status(400).end();
 
-  iprules.import(req.params.path, function(results) {
+  iprules.importRules(req.params.path, function(results) {
     res.status(200).json(results).end();
   });
 });
