@@ -16,8 +16,10 @@
 
 // TODO: get command line options working
 var PORT = 8099,
-    HOME = "/var/lib/iptables";
-    LOCK = HOME+"/iptables-webui.pid";
+    HOME = "./iptables",
+    LOCK = "./iptables-webui.pid";
+    // LOCK = "/var/run/iptables-webui.pid";
+
 var fs   = require("fs"),
     exec = require("child_process").exec;
 
