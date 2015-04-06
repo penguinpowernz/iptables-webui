@@ -110,6 +110,27 @@ app.get("/rules", function(req, res) {
   ]);
 });
 
+app.get('/rules/:name', function(req, res) {
+  var name = req.params.name
+  if ( name.substring(name.length - 1) == "*" ) {
+    iprules.find(name);
+  }
+});
+
+// create rule
+app.post("/rules/:name", function(req, res) {
+
+});
+
+// update rule
+app.put("/rules/:name", function(req, res) {
+
+});
+
+app.delete('/rules/:name', function(req, res) {
+
+});
+
 app.put("/rules/:name/enable", function(req, res) {
   iprules.enable(req.params.name, function(err) {
     res.status(err ? 500 : 200).end();
