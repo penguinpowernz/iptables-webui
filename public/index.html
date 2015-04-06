@@ -31,9 +31,9 @@
           <a class="navbar-brand" href="#">IP Tables</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav page-control">
             <li><a href="#rules">Rules</a></li>
-            <li><a href="#port_forwarding">Port Forwarding</a></li>
+            <li><a href="#port_forwards">Port Forwards</a></li>
             <li><a href="#status">Status</a></li>
             <li><a href="#help">Help</a></li>
           </ul>
@@ -44,8 +44,14 @@
     </nav>
 
     <div id="container">
+      <div id="pages">
+        <div class="page rules">
 
+        </div>
+        <div class="page port_forwards">
 
+        </div>
+      </div>
     </div><!-- /.container -->
 
     <!-- Placed at the end of the document so the pages load faster -->
@@ -53,17 +59,74 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/react-0.12.2.js"></script>
     <script src="js/jsx_transformer-0.12.2.js"></script>
+    <script src="js/rules.js"></script>
+    <script src="js/port_forwards.js"></script>
+
 
     <script type="text/javascript">
+
+      $(document).ready(function() {
+        $(".page-control a").each(function() {
+          $(this).click(PageControl.change);
+        });
+
+        $('#pages .page').hide();
+
+        if (location.hash != null) {
+          PageControl.change(location.hash.replace("#", ''))
+        }
+      });
+
+      var PageControl = (function() {
+        var change = function(e) {
+          if ( typeof(e) == "string" ) {
+            var name = e;
+          } else {
+            var name  = $(e.target).attr('href').replace('#', '');
+          }
+
+          var $page = $(".page."+name);
+
+          if ( $page.size() > 0 ) {
+            console.log("Changing to page "+name);
+            $(".page").hide();
+            $page.show();
+          } else {
+            console.log("Page "+name+ " doesn't exist");
+          }
+        };
+
+        return {
+          change: change
+        };
+      }());
+
+      var Ajax = (function() {
+        var get = function(uri) {
+          return $.getJSON(uri);
+        };
+
+        var post = function(uri, data, callback) {
+          return $.ajax({url: uri, data: data, method: 'POST', dataType: 'json'});
+        };
+
+        var put = function(uri, data, callback) {
+          return $.ajax({url: uri, data: data, method: 'PUT', dataTye: 'json'});
+        };
+
+        var del = function(uri, data, callback) {
+          return $.ajax({url: uri, data: data, method: 'DELETE', dataTye: 'json'});
+        };
+
+        return {
+          get: get,
+          post: post,
+          put: put,
+          delete: del
+        }
+      }());
     </script>
 
-    <script src="js/rules.jsx"></script>
 
-    <script type="text/jsx">
-      React.render(
-        <RulesBox url="rules"/>,
-        document.getElementById('container')
-      );
-    </script>
   </body>
 </html>
