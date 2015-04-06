@@ -27,10 +27,10 @@ process.on("exit", function(code) {
 });
 
 // check for root
-if ( process.getuid() != 0 ) {
-  console.error("ERROR: Must run as root");
-  process.exit(1);
-}
+// if ( process.getuid() != 0 ) {
+//   console.error("ERROR: Must run as root");
+//   process.exit(1);
+// }
 
 // TODO: check if the port is available
 
