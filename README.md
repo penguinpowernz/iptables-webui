@@ -6,11 +6,9 @@ A nice webui for the `iptables` command, written in NodeJS. Currently a work in 
 
 This WebUI is not meant to be used as a general access long running web server.  Instead the following flow is assumed:
 
-|Step| Action                                                   |                                           |
-|----|----------------------------------------------------------|-------------------------------------------|
-| 1  | The User SSH's into a remote server with a port forward  | `ssh myserver.com -L 8099:localhost:8099` |
-| 2  | The user starts the web interface                        | `iptables-webui start`                    |
-| 3  | The user navigates to the address in their browser       | `http://localhost:8099`                   |
+1. The User SSH's into a remote server with a port forward e.g: `ssh myserver.com -L 8099:localhost:8099`
+1. The user starts the iptables web interface `iptables-webui start`
+1. The user navigates to the address in their browser e.g: `http://localhost:8099`
 
 Pro-tip: Store the server/forwarding details in `~/.ssh/config`:
 
@@ -39,14 +37,14 @@ into this app.
 
 This is an example of what a rule looks like in JSON:
 
-* *name*: the name (user set)
-* *enabled*: whether the rule is enabled (user set)
-* *lines*: the lines that make up the rule, can be either (user set):
+* **name**: the name (user set)
+* **enabled**: whether the rule is enabled (user set)
+* **lines**: the lines that make up the rule, can be either (user set):
  * an object that can be parsed by the RuleParser
  * or a string of iptables arguments
-* *valid*: determined by the result of the last test
-* *test_lines*: the lines that made up the file used for the last test
-* *error*: the error that occured on the last test
+* **valid**: determined by the result of the last test
+* **test_lines**: the lines that made up the file used for the last test
+* **error**: the error that occured on the last test
 
 ```js
 {
