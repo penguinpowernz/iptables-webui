@@ -180,7 +180,7 @@ app.get("/reload", function(req, res) {
   });
 });
 
-app.post("/rules/:name/test", function(req, res) {
+app.get("/rules/:name/test", function(req, res) {
   iprules.test(req.params.name, function(err) {
     if ( err ) { res.status(400).json({message: err.message}).end(); }
     res.status(200).end();
