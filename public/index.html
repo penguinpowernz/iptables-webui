@@ -87,19 +87,22 @@
           $(this).click(PageControl.change);
         });
 
-        $('#pages .page').hide();
-
-        if (location.hash != null) {
-          PageControl.change(location.hash.replace("#", ''))
-        }
+        PageControl.init('rules');
       });
 
       var PageControl = (function() {
+        var init = function(default_page) {
+          $('#pages .page').hide();
+          change(location.hash || default_page);
+        };
+
         var change = function(e) {
+          var name;
           if ( typeof(e) == "string" ) {
-            var name = e;
+            if ( e == '' ) name = 'rules';
+            name = e.replace("#", '');
           } else {
-            var name  = $(e.target).attr('href').replace('#', '');
+            name  = $(e.target).attr('href').replace('#', '');
           }
 
           var $page = $(".page."+name);
@@ -114,6 +117,7 @@
         };
 
         return {
+          init: init,
           change: change
         };
       }());
