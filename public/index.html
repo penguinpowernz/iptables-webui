@@ -56,6 +56,7 @@
 
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery-1.10.0.min.js"></script>
+    <script src="js/ajax.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/react-0.12.2.js"></script>
     <script src="js/jsx_transformer-0.12.2.js"></script>
@@ -102,30 +103,6 @@
         };
       }());
 
-      var Ajax = (function() {
-        var get = function(uri) {
-          return $.getJSON(uri);
-        };
-
-        var post = function(uri, data, callback) {
-          return $.ajax({url: uri, data: data, method: 'POST', dataType: 'json'});
-        };
-
-        var put = function(uri, data, callback) {
-          return $.ajax({url: uri, data: data, method: 'PUT', dataTye: 'json'});
-        };
-
-        var del = function(uri, data, callback) {
-          return $.ajax({url: uri, data: data, method: 'DELETE', dataTye: 'json'});
-        };
-
-        return {
-          get: get,
-          post: post,
-          put: put,
-          delete: del
-        }
-      }());
     </script>
 
 
