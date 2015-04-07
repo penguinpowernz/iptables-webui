@@ -5,45 +5,62 @@ var PortForward = React.createClass({
       in:    '',
       dport: '',
       fport: '',
-      dst:   ''
+      dst:   '',
+      change: false
     }
   },
 
   getInitialProps: function() {
-    return {rules: {}};
+    return {lines: [], name: null};
   },
 
   componentDidMount: function() {
-    var newState = {};
-
-    if ( typeof(this.props.rules) != "undefined" ) {
-
-      if ( typeof(this.props.rules.nat) != "undefined" ) {
-        newState.in    = this.props.rules.nat.in;
-        newState.dport = this.props.rules.nat.dport;
-      }
-
-      if ( typeof(this.props.rules.forward) != "undefined" ) {
-        newState.fport = this.props.rules.forward.dport;
-        newState.dst   = this.props.rules.forward.dst;
-      }
-    }
-
-    this.setState(newState);
+    this.setStateArgs();
   },
 
-  buildRules: function(callback) {
+  setStateArgs: function() {
+    if ( this.props.lines === undefined ) return false;
 
-    if ( Object.keys(this.props.rules).length == 0 ) {
-      // nat rule
-      this.props.rules.nat = {
+    this.setState({
+      in    : this.props.lines[0].in,
+      dport : this.props.lines[0].dport,
+      fport : this.props.lines[1].dport,
+      dst   : this.props.lines[1].dst
+    });
+  },
+
+  buildLines: function(callback) {
+    var lines = [
+      this.buildNATLine(),
+      this.buildForwardLine()
+    ];
+
+    callback && callback(lines);
+  },
+
+  buildNATLine: function() {
+    if ( this.props.lines.length == 2 ) {
+      var line = this.props.lines[0]; // nat line should always be first
+    } else {
+      var line = {
         table: 'nat',
         chain: 'PREROUTING',
         target: 'DNAT',
       };
+    }
 
-      // fwd rule
-      this.props.rules.forward = {
+    line.in     = this.state.in;
+    line.dport  = this.state.dport;
+    line.to_dst = this.state.dst +':'+ this.state.fport;
+
+    return line;
+  },
+
+  buildForwardLine: function() {
+    if ( this.props.lines.length == 2 ) {
+      var line = this.props.lines[1]; // fwd line should always be last
+    } else {
+      var line = {
         chain: 'FORWARD',
         dst: this.props.data.dst,
         dport: this.props.data.fport,
@@ -51,13 +68,19 @@ var PortForward = React.createClass({
       };
     }
 
-    this.props.rules.nat.in        = this.state.in;
-    this.props.rules.nat.dport     = this.state.dport;
-    this.props.rules.nat.to_dst    = this.state.dst +':'+ this.state.fport;
-    this.props.rules.forward.dst   = this.state.dst;
-    this.props.rules.forward.dport = this.state.fport;
+    line.dport = this.state.fport;
+    line.dst   = this.state.dst;
 
-    callback && callback(rules);
+    return line;
+  },
+
+  buildRule: function(callback) {
+    var rule = {name: this.generateName()};
+
+    this.buildLines(function(lines) {
+      rule.lines = lines;
+      callback(rule);
+    }.bind(this));
   },
 
   handleChange: function(event) {
@@ -66,15 +89,12 @@ var PortForward = React.createClass({
   },
 
   save: function(event) {
-    this.buildRules(function(rules) {
-      var key  = this.generateKey(),
-          data = {rules: this.props.rules, key: key};
+    this.buildRule(function(rule) {
+      if ( rule.name != this.props.key ) rule.oldName = this.props.key;
 
-      if ( key != this.props.key ) data.oldKey = this.props.key;
-
-      this.props.onSave(data, function(err, saved) {
+      this.props.onSave(rule, function(err, saved) {
         if ( err ) {
-
+          // TODO: something
         } else if ( saved ) {
           this.setState({changed: false});
         }
@@ -82,7 +102,8 @@ var PortForward = React.createClass({
     }.bind(this));
   },
 
-  generateKey: function() {
+  // generates a name from the current settings
+  generateName: function() {
     return 'pf_'+['in', 'dport', 'dst', 'fport'].map(function(key) {
       return this.state[key];
     }).join("-");
@@ -120,67 +141,44 @@ var PortForward = React.createClass({
 
 var PortForwardPage = React.createClass({
   getInitialState: function() {
-    return {port_forwards: []};
+    return {rules: []};
   },
 
   componentDidMount: function() {
-    this.loadFromServer(function(pfs) {
-      this.setState({port_forwards: pfs});
-    });
+    this.loadFromServer();
   },
 
   loadFromServer: function(callback) {
-    $.getJSON(this.props.uri+'/rules/pf_*', function(rules) {
-      var pfs = [];
-      rules.forEach(function(rule) {
-        var group = rule.split("_"),
-            section = group.pop();
-
-        group = group.join('_');
-        
-        if ( !pfs[group] ) {
-          pfs[group] = {
-            key: group,
-            rules: {},
-          }
-        }
-
-        pfs[group].rules[section] = rule;
-      });
-
-      callback(pfs);
+    Ajax.get('/rules/pf_*').then(function(rules) {
+      this.setState({rules: rules})
     });
   },
 
-  handleSave: function(data, callback) {
-    if ( data.oldKey ) {
-      ajax.delete('/rules/' + data.oldKey+'_nat');
-      ajax.delete('/rules/' + data.oldKey+'_forward');
-      ajax.post('/rules/'+ data.key +'_nat', {rule: data.rules.nat}).then(function() {
-        ajax.post('/rules/'+ data.key +'_forward', {rule: data.rules.forward}).then(function() {
-          callback(null, true);
-        });
+  // handles saves coming from the PortForward views
+  handleSave: function(rule, callback) {
+    if ( rule.oldName ) {
+      ajax.delete('/rules/' + rule.oldName);
+      ajax.post('/rules/'+ rule.name, {rule: rule}).then(function() {
+        callback(null, true);
       });
     } else {
-      ajax.put('/rules/'+data.key+'_nat', {rule: data.rules.nat}).then(function() {
-        ajax.put('/rules/'+data.key+'_forward', {rule: data.rules.forward}).then(function() {
-          callback(null, true);
-        });
+      ajax.put('/rules/'+rule.name, {rule: rule}).then(function() {
+        callback(null, true);
       });
     }
   },
 
   render: function() {
-    var pfs = this.state.port_forwards.map(function(pf) {
+    var pfs = this.state.rules.map(function(rule) {
       return (
-        <PortForward rules={pf.rules} key={pf.key} onSave={this.handleSave} />
+        <PortForward lines={rule.lines} name={rule.name} key={rule.name} onSave={this.handleSave} />
       );
     });
 
     return (
       <div>
         {pfs}
-        <PortForward data={{}} new={true} />
+        <PortForward />
       </div>
     );
   }
