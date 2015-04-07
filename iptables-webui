@@ -152,6 +152,12 @@ app.get('/status', function(req, res) {
   res.json({forwarding: forwarding}).end();;
 });
 
+app.get('/iptables/list', function(req, res) {
+  exec('/sbin/iptables -L', function(err, stdout, stderr) {
+    res.json({list: stdout, error: err && err.message, stderr: stderr}).end();
+  });
+});
+
 app.put("/rules/:name/enable", function(req, res) {
   iprules.enable(req.params.name, function(err) {
     res.status(err ? 500 : 200).end();
