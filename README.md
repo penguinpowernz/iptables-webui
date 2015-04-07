@@ -90,11 +90,26 @@ The RuleParser can handle the following arguments (examples shown):
 }
 ```
 
+## API Spec
+
+This is the API so far, not everything is working:
+
+```sh
+GET    /rules              # gets all the rules
+POST   /rules              # creates a rule
+GET    /rules/:pattern     # gets a rule by name or glob pattern
+PUT    /rules/:name        # updates the named rule
+DELETE /rules/:name        # deletes the named rule
+GET    /rules/:name/test   # tests the named rule
+GET    /iptables/list      # gives iptables -L output
+GET    /status             # various statuses
+```
+
 ## You damn kids are just jamming javascript in everywhere!
 
-I did it in NodeJS because:
+I did it in NodeJS and ReactJS because:
 
 * I don't want to learn a real language like C++
-* I want to learn more about NodeJS
-* I want to use it on an ARM and it's faster than ruby
+* I want to learn more about NodeJS an ReactJS
+* I want to use it on an ARM and Node is faster than ruby (dammit!)
 * I am a sadomasochist
