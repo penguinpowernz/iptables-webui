@@ -132,6 +132,26 @@ app.delete('/rules/:name', function(req, res) {
 
 });
 
+app.get('/status', function(req, res) {
+  var forwarding = {};
+  
+  fs.readdirSync("/proc/sys/net/ipv4/conf").forEach(function(device) {
+    switch(device) {
+      case "default":
+      case "all":
+        return true;
+        break;
+      default:
+        var state = parseInt(fs.readFileSync("/proc/sys/net/ipv4/conf/"+device+"/forwarding", 'utf-8').trim());
+        forwarding[device] = state ? true : false;
+        return true;
+        break;
+    }
+  });
+
+  res.json({forwarding: forwarding}).end();;
+});
+
 app.put("/rules/:name/enable", function(req, res) {
   iprules.enable(req.params.name, function(err) {
     res.status(err ? 500 : 200).end();
