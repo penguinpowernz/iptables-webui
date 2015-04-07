@@ -114,7 +114,13 @@ app.get('/rules/:pattern', function(req, res) {
 
 // create rule
 app.post("/rules/:name", function(req, res) {
-
+  iprules.create(req.body, function(err, rules) {
+    if ( !err ) {
+      res.json({rules: rules}).status(201).end();
+    } else if ( err ) {
+      res.json({error: err.message, rules: rules}).status(500).end();
+    }
+  });
 });
 
 // update rule
