@@ -1,6 +1,6 @@
-var RulesBox = React.createClass({
+var RulesPage = React.createClass({
   getInitialState: function() {
-    return {data: []};
+    return {rules: []};
   },
 
   componentDidMount: function() {
@@ -9,41 +9,35 @@ var RulesBox = React.createClass({
   },
 
   loadRulesFromServer: function() {
-    $.ajax({
-      url: this.props.url,
-      dataType: 'json',
-      success: function(data) {
-        console.log(data)
-        this.setState({data: data});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
+    Ajax.get('/rules').then(function(rules) {
+      this.setState({rules: rules});
+    }.bind(this));
   },
 
   render: function() {
     return (
       <div className="ruleBox">
-        <h1>Simple Rules</h1>
-        <RulesList data={this.state.data}/>
+        <h1>Rules</h1>
+        <Rule name="" lines={[]} enabled={false} new={true}/>
+        <RulesList rules={this.state.rules}/>
       </div>
     );
   }
-
 });
 
 var RulesList = React.createClass({
-  render: function() {
-    var ruleNodes = this.props.data.map(function (rule) {            
+  renderNodes: function() {
+    return this.props.rules.map(function (rule) {            
       return (
-        <Rule name={rule.name} enabled={rule.enabled} />
+        <Rule name={rule.name} lines={rule.lines} enabled={rule.enabled} />
       );
     });
-
+  },
+  
+  render: function() {
     return (
-      <div className="ruleList">
-        {ruleNodes}
+      <div className="rule_list">
+        {this.renderNodes}
       </div>
     );
   }
@@ -52,31 +46,55 @@ var RulesList = React.createClass({
 
 var Rule = React.createClass({
   getInitialState: function() {
-    return {enabled: this.props.enabled};
+    return {enabled: this.props.enabled, changed: false, lines: []};
   },
 
-  changeState: function(state) {
-    var action = (state.enabled) ? "enable" : "disable";
-    $.getJSON("/rules/"+this.props.name+"/"+action).success(function() {
-      this.state.enabled = state.enabled;
-    }).fail(function() {
-      alert("Failed to "+action+" the rule :(");
-    });
+  changeState: function(enabled) {
+    this.state.enabled = enabled;
   },
+
+  formatName: function(event) {
+    event.target.value = event.target.value.replace(/[^\w-_]/, '')
+      .replace(/[-]+/, '-')
+      .replace(/[_]+/, '_');
+  },
+
+  handleChange: function(event) {
+    this.setState({changed: true});
+  },
+
+  handleSave: function(event) {},
+  handleDelete: function(event) {},
+  handleTest: function(event) {},
 
   render: function() {
     var classes = [
-      "rule",
+      "rule well",
       this.props.enabled ? "enabled" : "disabled"
     ].join(" ");
 
+    var lines_placeholder = "Lines of the rule go here, e.g:\n{ chain: 'input', dport: '22', action: 'accept', states: ['new'] }\n-A INPUT --dport 22 -j ACCEPT -m state --state NEW";
 
+    var lines = this.props.lines.map(function(line) {
+      if ( typeof(line) === 'string' ) {
+        return line;
+      } else {
+        return JSON.stringify(line);
+      }
+    }).join("\n");
 
     return (
       <div className={classes}>
         <div>
+          <input className="name" placeholder="Name of the rule..." onKeyUp={this.formatName} onChange={this.handleChange} value={this.props.name} />
+          <textarea placeholder={lines_placeholder} className="lines" onChange={this.handleChange}>{lines}</textarea>
+        </div>
+
+        <div className="pull-right">
           <RuleStateButtons name={this.props.name} onChangeState={this.changeState} />
-          <h2 className="ruleName">{this.props.name}</h2>
+          <Button text='Save' style="success" onClick={this.handleSave} disabled={!this.state.changed} />
+          <Button text='Test' style="warning" onClick={this.handleTest} disabled={this.props.new} />
+          <Button text='Delete' style="danger" onClick={this.handleDelete} disabled={this.props.new} />
         </div>
       </div>
     );
@@ -85,11 +103,11 @@ var Rule = React.createClass({
 
 var RuleStateButtons = React.createClass({
   enable: function() {
-    this.props.onChangeState({enabled: true});
+    this.props.onChangeState(true);
   },
 
   disable: function() {
-    this.props.onChangeState({enabled: false});
+    this.props.onChangeState(false);
   },
 
   render: function() {
@@ -118,6 +136,6 @@ var RuleStateButtons = React.createClass({
 });
 
 React.render(
-  <RulesBox url="rules"/>,
+  <RulesPage />,
   $('.page.rules')[0]
 );

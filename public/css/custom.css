@@ -7,7 +7,7 @@ body {
 }
 
 .rule { 
-  width: 500px;
+  width: 100%;
   padding: 5px;
   overflow: hidden;
   margin-bottom: 10px;
@@ -19,10 +19,32 @@ body {
   background: #D6FFBF;
 }
 
-.rule h2 {
+.rule input.name {
   margin: 0px;
-  padding: 0px;
-  float: left;
+  width: 100%;
+  padding: 0px 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  font-size: 30px;
+}
+
+.rule textarea:hover,
+.rule textarea:focus,
+.rule input.name:focus,
+.rule input.name:hover {
+  border: 1px solid #c0c0c0;
+  background: white;
+}
+
+.rule textarea {
+  width: 100%;
+  font-size: 16px;
+  border-radius: 5px;
+  font-family: monospace;
+  height: 100px;
+  background: transparent;
+  border: 1px solid transparent;
 }
 
 .rule div.btn-group {
