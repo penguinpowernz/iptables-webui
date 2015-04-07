@@ -105,11 +105,11 @@ app.get("/rules", function(req, res) {
   });
 });
 
-app.get('/rules/:name', function(req, res) {
-  var name = req.params.name
-  if ( name.substring(name.length - 1) == "*" ) {
-    iprules.find(name);
-  }
+app.get('/rules/:pattern', function(req, res) {
+  iprules.find(req.params.pattern, function(rules) {
+    var code = (rules.length > 0 ) ? 200 : 404;
+    res.json(rules).status(code).end();
+  });
 });
 
 // create rule
