@@ -65,3 +65,29 @@ body {
 .port_forward p {
   font-size: small;
 }
+
+#device-forwarding {
+  width: 300px;
+  overflow: hidden;
+}
+
+#device-forwarding .device {
+  overflow: hidden;
+}
+
+#device-forwarding .device p {
+  float: left;
+  font-weight: bold;
+}
+
+#device-forwarding .device p.state {
+  float: right;
+}
+
+#device-forwarding .device.on p.state {
+  color: green;
+}
+
+#device-forwarding .device.off p.state {
+  color: red;
+}
