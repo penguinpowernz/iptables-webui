@@ -1,0 +1,33 @@
+/*.port_forward {
+  width: 100%;
+  background: lightblue;
+  overflow: hidden;
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid black;
+}
+
+.port_forward .in,
+.port_forward .dport,
+.port_forward .dst,
+.port_forward .fport {
+  float: left;
+  margin-right: 10px;
+}
+
+.port_forward .controls {
+  float:right;
+}
+
+.port_forward .dport input,
+.port_forward .fport input,
+.port_forward .in input {
+  width: 100px;
+}
+
+
+.port_forward p {
+  font-size: small;
+}
+
+*/
