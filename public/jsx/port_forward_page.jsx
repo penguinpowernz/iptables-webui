@@ -28,18 +28,42 @@ var PortForwardPage = React.createClass({
     }
   },
 
-  render: function() {
-    var pfs = this.state.rules.map(function(rule) {
+  handleTest: function(rule, callback) {
+
+  },
+
+  handleDelete: function(rule, callback) {
+
+  },
+
+  renderNodes: function() {
+    return this.state.rules.map(function(rule) {
       return (
-        <PortForwardRule lines={rule.lines} name={rule.name} key={rule.name} onSave={this.handleSave} />
+        <PortForwardRule lines={rule.lines} name={rule.name} key={rule.name} onSave={this.handleSave} onTest={this.handleTest} onDelete={this.handleDelete} />
       );
     });
+  },
+
+  render: function() {
 
     return (
       <div>
         <h3>Port Forwards</h3>
-        <PortForwardRule />
-        {pfs}
+        <table className="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th>Interface</th>
+              <th>External Port</th>
+              <th>Internal Host</th>
+              <th>Internal Port</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <PortForwardRule />
+            {this.renderNodes()}
+          </tbody>
+        </table>
       </div>
     );
   }

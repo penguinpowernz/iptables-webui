@@ -109,31 +109,39 @@ var PortForwardRule = React.createClass({
     }).join("-");
   },
 
+  handleSave: function(event) {
+    this.props.onSave();
+  },
+
+  handleTest: function(event) {
+    this.props.onTest();
+  },
+
+  handleDelete: function(event) {
+    this.props.onDelete();
+  },
+
   render: function() {
     return (
-      <div className="port_forward">
-        <div className="in">
-          <input name="in" value={this.state.in} onChange={this.handleChange} />
-          <p>Interface</p>
-        </div>
-        <div className="dport">
-          <input name="dport" value={this.state.dport} onChange={this.handleChange} />
-          <p>External Port</p>
-        </div>
-        <div className="dst">
-          <input name="dst" value={this.state.dst} onChange={this.handleChange} />
-          <p>Internal Host</p>
-        </div>
-        <div className="fport">
-          <input name="fport" value={this.state.fport} onChange={this.handleChange} />
-          <p>Internal Port</p>
-        </div>
-        <div className="controls">
-          <button onClick={this.test}>Test</button>
-          <button onClick={this.save}>Save</button>
-          <button onClick={this.delete}>Delete</button>
-        </div>
-      </div>
+      <tr className="port_forward">
+        <td>
+          <input className="in" name="in" value={this.state.in} onChange={this.handleChange} />
+        </td>
+        <td>
+          <input className="dport" name="dport" value={this.state.dport} onChange={this.handleChange} />
+        </td>
+        <td>
+          <input className="dst" name="dst" value={this.state.dst} onChange={this.handleChange} />
+        </td>
+        <td>
+          <input className="fport" name="fport" value={this.state.fport} onChange={this.handleChange} />
+        </td>
+        <td className="controls">
+          <Button style="success" onClick={this.handleSave} text="Save" disabled={false}/>
+          <Button style="warning" onClick={this.handleTest} text="Test" disabled={false}/>
+          <Button style="danger" onClick={this.handleDelete} text="Delete" disabled={false}/>
+        </td>
+      </tr>
     );
   }
 });
