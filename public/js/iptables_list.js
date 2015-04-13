@@ -24,8 +24,3 @@ var IPTablesList = React.createClass({displayName: "IPTablesList",
     );
   }
 });
-
-React.render(
-  React.createElement(IPTablesList, null),
-  document.getElementById('iptables-list')
-);

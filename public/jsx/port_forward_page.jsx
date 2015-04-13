@@ -9,8 +9,9 @@ var PortForwardPage = React.createClass({
 
   loadFromServer: function(callback) {
     Ajax.get('/rules/pf_*').then(function(rules) {
-      this.setState({rules: rules})
-    });
+      this.setState({rules: rules});
+      callback && callback(rules);
+    }.bind(this));
   },
 
   // handles saves coming from the PortForward views

@@ -30,8 +30,8 @@ var ForwardingStatus = React.createClass({
     }.bind(this));
 
     return (
-      <h1>Device Forwarding Status</h1>
       <div id="device_forwarding">
+        <h1>Device Forwarding Status</h1>
         {devices}
       </div>
     );
