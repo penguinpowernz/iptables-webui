@@ -47,37 +47,31 @@
       <div id="pages">
         <div class="page rules"></div>
         <div class="page port_forwards"></div>
-        <div class="page status">
-          <h2>Device Forwarding</h2>
-
-          <div id="device-forwarding"></div>
-
-          <p>You need to run this command as root for each device you want to forward on:</p>
-          <pre>echo '1' > /proc/sys/net/ipv4/conf/eth0/forwarding</pre>
-          <p>You can disable forwarding on an interface, by doing the opposite:</p>
-          <pre>echo '0' > /proc/sys/net/ipv4/conf/eth0/forwarding</pre>
-
-          <h2>Current Rules</h2>
-          <p>This shows what rules IP Tables is currently running with:</p>
-          <div id="iptables-list"></div>
-
-          <h2>Source Rules</h2>
-          <p>This shows what rules in persistence generated the above rules:</p>
-          <div id="source-rules"></div>
-        </div>
+        <div class="page status"></div>
       </div>
     </div><!-- /.container -->
 
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery-1.10.0.min.js"></script>
+    <script src="js/page_control.js"></script>
     <script src="js/ajax.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/react-0.12.2.js"></script>
     <script src="js/jsx_transformer-0.12.2.js"></script>
-    <script src="js/components.js"></script>
-    <script src="js/status.js"></script>
-    <script src="js/rules.js"></script>
-    <script src="js/port_forwards.js"></script>
+    <script src="js/button.js"></script>
+    <script src="js/status_page.js"></script>
+    <script src="js/rule_state_buttons.js"></script>
+    <script src="js/rule.js"></script>
+    <script src="js/rules_list.js"></script>
+    <script src="js/rules_page.js"></script>
+    <script src="js/port_forward_rule.js"></script>
+    <script src="js/port_forward_page.js"></script>
+
+    <script type="text/jsx">
+
+
+      
+    </script>
 
 
     <script type="text/javascript">
@@ -90,38 +84,7 @@
         PageControl.init('rules');
       });
 
-      var PageControl = (function() {
-        var init = function(default_page) {
-          $('#pages .page').hide();
-          change(location.hash || default_page);
-        };
-
-        var change = function(e) {
-          var name;
-          if ( typeof(e) == "string" ) {
-            if ( e == '' ) name = 'rules';
-            name = e.replace("#", '');
-          } else {
-            name  = $(e.target).attr('href').replace('#', '');
-          }
-
-          var $page = $(".page."+name);
-
-          if ( $page.size() > 0 ) {
-            console.log("Changing to page "+name);
-            $(".page").hide();
-            $page.show();
-          } else {
-            console.log("Page "+name+ " doesn't exist");
-          }
-        };
-
-        return {
-          init: init,
-          change: change
-        };
-      }());
-
+      
     </script>
 
 

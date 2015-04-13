@@ -1,0 +1,25 @@
+#device_forwarding {
+  width: 300px;
+  overflow: hidden;
+}
+
+#device_forwarding .device {
+  overflow: hidden;
+}
+
+#device_forwarding .device p {
+  float: left;
+  font-weight: bold;
+}
+
+#device_forwarding .device p.state {
+  float: right;
+}
+
+#device_forwarding .device.on p.state {
+  color: green;
+}
+
+#device_forwarding .device.off p.state {
+  color: red;
+}
